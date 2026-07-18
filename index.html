@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quizzando - Studia. Allenati. Vinci.</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="night-mode">
+  <main class="app-shell">
+    <section class="topbar" aria-label="Controlli quiz">
+      <div>
+        <p class="eyebrow">Studia. Allenati. Vinci.</p>
+        <h1>Quizzando</h1>
+      </div>
+    </section>
+
+    <section id="contestGate" class="contest-gate" aria-label="Selezione concorso">
+      <div>
+        <p class="eyebrow">Concorso</p>
+        <h2>Seleziona banca dati</h2>
+      </div>
+      <div class="contest-picker">
+        <label class="field">
+          <span>Concorso</span>
+          <select id="contestSelect">
+            <option value="allievi-agenti-polizia-2026">Allievi Agenti Polizia di Stato 2026</option>
+          </select>
+        </label>
+        <button id="chooseContestBtn" class="primary-btn" type="button">Continua</button>
+      </div>
+    </section>
+
+    <section id="studyControls" class="controls app-section-hidden" aria-label="Impostazioni">
+      <div class="filter-grid">
+        <label class="field field-wide">
+          <span>Materia</span>
+          <select id="subjectSelect"></select>
+        </label>
+        <label class="field field-wide">
+          <span>Sotto-argomento</span>
+          <select id="topicSelect"></select>
+        </label>
+        <label class="field">
+          <span>Numero domande</span>
+          <select id="limitSelect">
+            <option value="10">10</option>
+            <option value="20" selected>20</option>
+            <option value="40">40</option>
+            <option value="all">Tutte</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Modalità</span>
+          <select id="modeSelect">
+            <option value="all">Tutte</option>
+            <option value="unanswered">Mai fatte</option>
+            <option value="wrong">Da ripetere</option>
+            <option value="correct">Corrette</option>
+            <option value="favorite">Preferite</option>
+          </select>
+        </label>
+      </div>
+      <div class="control-strip">
+        <label class="toggle">
+          <input id="shuffleToggle" type="checkbox" checked>
+          <span>Ordine casuale</span>
+        </label>
+        <div class="control-actions">
+          <button id="resetProgressBtn" class="ghost-btn danger-action" type="button">Azzera progressi</button>
+          <button id="reviewBtn" class="ghost-btn" type="button" disabled>Ripassa errori</button>
+          <button id="startBtn" class="primary-btn" type="button">Avvia quiz</button>
+        </div>
+      </div>
+      <div class="selection-summary" aria-live="polite">
+        <div>
+          <span>Domande selezione</span>
+          <strong id="selectionTotalCount">0</strong>
+        </div>
+        <div>
+          <span>Già fatte</span>
+          <strong id="selectionAnsweredCount">0</strong>
+        </div>
+        <div>
+          <span>Giuste totali</span>
+          <strong id="selectionCorrectCount">0</strong>
+        </div>
+        <div>
+          <span>Sbagliate totali</span>
+          <strong id="selectionWrongCount">0</strong>
+        </div>
+      </div>
+    </section>
+
+    <section id="quizSection" class="quiz-card app-section-hidden" aria-live="polite">
+      <div class="question-meta">
+        <span id="topicLabel">Seleziona materia e sotto-argomento</span>
+        <div class="question-status">
+          <span id="progressLabel">0 / 0</span>
+          <span class="answer-counter good-counter">Giuste <strong id="scoreCount">0</strong></span>
+          <span class="answer-counter bad-counter">Sbagliate <strong id="wrongCount">0</strong></span>
+        </div>
+      </div>
+
+      <div class="progress-track" aria-hidden="true">
+        <div id="progressBar" class="progress-bar"></div>
+      </div>
+
+      <p id="questionId" class="question-id">N domanda</p>
+      <h2 id="questionText">Avvia il quiz per iniziare a studiare le domande della banca dati.</h2>
+
+      <div id="answers" class="answers" role="group" aria-label="Risposte"></div>
+
+      <div id="feedback" class="feedback hidden"></div>
+
+      <div class="actions">
+        <div class="navigation-actions">
+          <button id="prevBtn" class="ghost-btn" type="button" disabled>Indietro</button>
+          <button id="nextBtn" class="primary-btn" type="button" disabled>Prossima</button>
+        </div>
+        <div class="secondary-actions">
+          <button id="revealBtn" class="ghost-btn" type="button" disabled>Mostra risposta</button>
+          <button id="favoriteBtn" class="ghost-btn" type="button" disabled>Preferita</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="questions.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
