@@ -1,6 +1,7 @@
 const data = window.GEOMETRIA_DATA;
 
 const elements = {
+  topbar: document.querySelector('#topbar'),
   contestGate: document.querySelector('#contestGate'),
   contestSelect: document.querySelector('#contestSelect'),
   chooseContestBtn: document.querySelector('#chooseContestBtn'),
@@ -11,6 +12,7 @@ const elements = {
   limitSelect: document.querySelector('#limitSelect'),
   modeSelect: document.querySelector('#modeSelect'),
   shuffleToggle: document.querySelector('#shuffleToggle'),
+  homeBtn: document.querySelector('#homeBtn'),
   startBtn: document.querySelector('#startBtn'),
   reviewBtn: document.querySelector('#reviewBtn'),
   scoreCount: document.querySelector('#scoreCount'),
@@ -23,7 +25,6 @@ const elements = {
   feedback: document.querySelector('#feedback'),
   prevBtn: document.querySelector('#prevBtn'),
   nextBtn: document.querySelector('#nextBtn'),
-  revealBtn: document.querySelector('#revealBtn'),
   favoriteBtn: document.querySelector('#favoriteBtn'),
   resetProgressBtn: document.querySelector('#resetProgressBtn'),
   wrongCount: document.querySelector('#wrongCount'),
@@ -52,13 +53,31 @@ const CONSTITUTIONAL_TERMS_TOPIC_VALUE = '__constitutional_terms__';
 const questionsById = new Map(data.questions.map((question) => [question.id, question]));
 let progress = loadProgress();
 
+function isMobileQuizView() {
+  return window.matchMedia('(max-width: 600px)').matches;
+}
+
 function showStudyApp() {
+  document.body.classList.remove('quiz-active');
+  document.body.classList.add('study-active');
+  elements.topbar.classList.remove('app-section-hidden');
   elements.contestGate.classList.add('app-section-hidden');
   elements.studyControls.classList.remove('app-section-hidden');
+  elements.quizSection.classList.add('app-section-hidden');
 }
 
 function showQuizPanels() {
+  document.body.classList.toggle('quiz-active', isMobileQuizView());
+  document.body.classList.toggle('study-active', !isMobileQuizView());
+  elements.topbar.classList.toggle('app-section-hidden', isMobileQuizView());
+  elements.studyControls.classList.toggle('app-section-hidden', isMobileQuizView());
   elements.quizSection.classList.remove('app-section-hidden');
+}
+
+function returnHome() {
+  showStudyApp();
+  updateStats();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function loadContestSelection() {
@@ -413,7 +432,6 @@ function buildSession(sourceQuestions = null) {
   const selectedTopic = elements.topicSelect.value;
   const limit = elements.limitSelect.value;
   let questions = sourceQuestions || applyModeFilter(getBaseSelection());
-  showQuizPanels();
 
   const orderedSpecialTopic = selectedTopic === DATE_TOPIC_VALUE || selectedTopic === CONSTITUTIONAL_DATE_TOPIC_VALUE || selectedTopic === CONSTITUTIONAL_TERMS_TOPIC_VALUE;
   if (elements.shuffleToggle.checked && !orderedSpecialTopic) {
@@ -432,8 +450,10 @@ function buildSession(sourceQuestions = null) {
   state.score = 0;
   state.completed = 0;
   state.wrong = [];
+  showQuizPanels();
   updateStats();
   renderQuestion();
+  elements.quizSection.scrollIntoView({ block: 'start' });
 }
 
 function renderQuestion() {
@@ -442,7 +462,6 @@ function renderQuestion() {
   elements.feedback.textContent = '';
   elements.prevBtn.disabled = state.index <= 0;
   elements.nextBtn.disabled = state.session.length === 0;
-  elements.revealBtn.disabled = state.session.length === 0;
   elements.favoriteBtn.disabled = state.session.length === 0;
   state.selected = false;
 
@@ -508,7 +527,6 @@ function renderStoredResponse(currentQuestion) {
 
   elements.feedback.className = storedResponse.isCorrect ? 'feedback good' : 'feedback bad';
   elements.feedback.textContent = storedResponse.isCorrect ? 'Risposta corretta.' : `Risposta corretta: ${currentQuestion.answer}`;
-  elements.revealBtn.disabled = true;
 }
 
 function selectAnswer(button, selectedAnswer) {
@@ -542,32 +560,6 @@ function selectAnswer(button, selectedAnswer) {
 
   recordProgress(currentQuestion, isCorrect);
   elements.nextBtn.disabled = false;
-  elements.revealBtn.disabled = true;
-  updateStats();
-}
-
-function revealAnswer() {
-  if (state.selected || state.session.length === 0 || state.index >= state.session.length) {
-    return;
-  }
-  const currentQuestion = state.session[state.index];
-  state.selected = true;
-  state.completed += 1;
-  state.wrong.push(currentQuestion);
-  state.responses[currentQuestion.id] = { selectedAnswer: null, isCorrect: false };
-
-  for (const answerButton of elements.answers.querySelectorAll('.answer-btn')) {
-    answerButton.disabled = true;
-    if (normalizeAnswer(answerButton.textContent) === normalizeAnswer(currentQuestion.answer)) {
-      answerButton.classList.add('correct');
-    }
-  }
-
-  elements.feedback.className = 'feedback bad';
-  elements.feedback.textContent = `Risposta corretta: ${currentQuestion.answer}`;
-  recordProgress(currentQuestion, false);
-  elements.nextBtn.disabled = false;
-  elements.revealBtn.disabled = true;
   updateStats();
 }
 
@@ -586,7 +578,6 @@ function renderFinished() {
   elements.feedback.className = 'feedback good';
   elements.feedback.textContent = state.wrong.length === 0 ? 'Nessun errore in questa sessione.' : 'Puoi ripassare solo le domande sbagliate.';
   elements.nextBtn.disabled = true;
-  elements.revealBtn.disabled = true;
   elements.reviewBtn.disabled = getWrongQuestions().length === 0;
   elements.favoriteBtn.disabled = true;
   elements.prevBtn.disabled = state.session.length === 0;
@@ -629,14 +620,16 @@ function updateSelectionStats() {
 function updateFavoriteButton() {
   if (state.session.length === 0 || state.index >= state.session.length) {
     elements.favoriteBtn.disabled = true;
-    elements.favoriteBtn.textContent = 'Preferita';
+    elements.favoriteBtn.textContent = '☆';
+    elements.favoriteBtn.setAttribute('aria-label', 'Preferita');
     elements.favoriteBtn.classList.remove('active-favorite');
     return;
   }
   const currentQuestion = state.session[state.index];
   const active = isFavorite(currentQuestion.id);
   elements.favoriteBtn.disabled = false;
-  elements.favoriteBtn.textContent = active ? 'Preferita salvata' : 'Preferita';
+  elements.favoriteBtn.textContent = active ? '★' : '☆';
+  elements.favoriteBtn.setAttribute('aria-label', active ? 'Preferita salvata' : 'Preferita');
   elements.favoriteBtn.classList.toggle('active-favorite', active);
 }
 
@@ -685,10 +678,10 @@ loadContestSelection();
 elements.subjectSelect.addEventListener('change', populateTopics);
 elements.topicSelect.addEventListener('change', updateStats);
 elements.chooseContestBtn.addEventListener('click', chooseContest);
+elements.homeBtn.addEventListener('click', returnHome);
 elements.startBtn.addEventListener('click', () => buildSession());
 elements.prevBtn.addEventListener('click', previousQuestion);
 elements.nextBtn.addEventListener('click', nextQuestion);
-elements.revealBtn.addEventListener('click', revealAnswer);
 elements.favoriteBtn.addEventListener('click', () => {
   if (state.session.length > 0 && state.index < state.session.length) {
     toggleFavorite(state.session[state.index].id);

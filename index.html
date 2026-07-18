@@ -8,7 +8,7 @@
 </head>
 <body class="night-mode">
   <main class="app-shell">
-    <section class="topbar" aria-label="Controlli quiz">
+    <section id="topbar" class="topbar" aria-label="Controlli quiz">
       <div>
         <p class="eyebrow">Studia. Allenati. Vinci.</p>
         <h1>Quizzando</h1>
@@ -93,6 +93,10 @@
     </section>
 
     <section id="quizSection" class="quiz-card app-section-hidden" aria-live="polite">
+      <div class="quiz-toolbar">
+        <button id="homeBtn" class="ghost-btn compact-btn" type="button">Home</button>
+        <button id="favoriteBtn" class="icon-btn favorite-icon" type="button" disabled aria-label="Preferita">☆</button>
+      </div>
       <div class="question-meta">
         <span id="topicLabel">Seleziona materia e sotto-argomento</span>
         <div class="question-status">
@@ -114,14 +118,8 @@
       <div id="feedback" class="feedback hidden"></div>
 
       <div class="actions">
-        <div class="navigation-actions">
-          <button id="prevBtn" class="ghost-btn" type="button" disabled>Indietro</button>
-          <button id="nextBtn" class="primary-btn" type="button" disabled>Prossima</button>
-        </div>
-        <div class="secondary-actions">
-          <button id="revealBtn" class="ghost-btn" type="button" disabled>Mostra risposta</button>
-          <button id="favoriteBtn" class="ghost-btn" type="button" disabled>Preferita</button>
-        </div>
+        <button id="prevBtn" class="ghost-btn nav-btn" type="button" disabled>Indietro</button>
+        <button id="nextBtn" class="primary-btn nav-btn" type="button" disabled>Prossima</button>
       </div>
     </section>
 
