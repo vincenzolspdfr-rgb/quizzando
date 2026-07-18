@@ -544,3 +544,156 @@ button:not(:disabled):hover {
     min-width: 0;
   }
 }
+
+@media (max-width: 600px) {
+  body {
+    background:
+      linear-gradient(135deg, rgba(82, 199, 184, 0.10), transparent 38%),
+      var(--paper);
+  }
+
+  .app-shell {
+    width: 100%;
+    padding: max(18px, env(safe-area-inset-top)) 12px max(24px, env(safe-area-inset-bottom));
+  }
+
+  .topbar {
+    margin-bottom: 14px;
+    padding: 0 2px;
+  }
+
+  .eyebrow {
+    font-size: 0.68rem;
+  }
+
+  h1 {
+    font-size: clamp(2.35rem, 17vw, 3.7rem);
+  }
+
+  .contest-gate,
+  .controls,
+  .quiz-card {
+    border-radius: 14px;
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.26);
+  }
+
+  .contest-gate,
+  .controls {
+    padding: 14px;
+    gap: 12px;
+  }
+
+  .contest-gate h2 {
+    font-size: 1.35rem;
+  }
+
+  .filter-grid {
+    gap: 10px;
+  }
+
+  .control-strip {
+    gap: 12px;
+    padding-top: 12px;
+  }
+
+  .control-actions {
+    gap: 9px;
+  }
+
+  .selection-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    padding-top: 12px;
+  }
+
+  .selection-summary > div {
+    min-height: 58px;
+    padding: 9px 10px;
+  }
+
+  .selection-summary span {
+    font-size: 0.68rem;
+  }
+
+  .selection-summary strong {
+    font-size: 1.12rem;
+  }
+
+  select,
+  .primary-btn,
+  .ghost-btn {
+    min-height: 48px;
+    border-radius: 10px;
+  }
+
+  select {
+    padding: 0 11px;
+    font-size: 0.95rem;
+  }
+
+  .quiz-card {
+    padding: 16px;
+    min-height: 0;
+  }
+
+  .question-meta {
+    gap: 10px;
+    font-size: 0.78rem;
+  }
+
+  .question-status {
+    width: 100%;
+    gap: 7px;
+  }
+
+  .answer-counter {
+    padding: 6px 8px;
+    font-size: 0.78rem;
+  }
+
+  .progress-track {
+    height: 7px;
+    margin-bottom: 18px;
+  }
+
+  #questionText {
+    font-size: 1.18rem;
+    line-height: 1.32;
+    margin-bottom: 18px;
+  }
+
+  .answers {
+    gap: 10px;
+  }
+
+  .answer-btn {
+    min-height: 64px;
+    padding: 13px 13px;
+    border-radius: 12px;
+    gap: 11px;
+    font-size: 1rem;
+  }
+
+  .answer-btn::before {
+    flex-basis: 28px;
+    width: 28px;
+    height: 28px;
+    font-size: 1.05rem;
+  }
+
+  .feedback {
+    margin-top: 14px;
+    padding: 12px 13px;
+    border-radius: 10px;
+  }
+
+  .actions {
+    margin-top: 16px;
+    gap: 9px;
+  }
+
+  .navigation-actions,
+  .secondary-actions {
+    gap: 9px;
+  }
+}
